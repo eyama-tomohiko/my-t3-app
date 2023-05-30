@@ -17,16 +17,15 @@ const SinglePostPage: NextPage = () => {
 };
 
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { createContext } from "server/context";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 
 export const getStaticProps = async (context) => {
-const ssg = createServerSideHelpers({
-  router: appRouter,
-  ctx: { prisma},
-  transformer: superjson, // optional - adds superjson serialization
-});
-}
+  const ssg = createServerSideHelpers({
+    router: appRouter,
+    ctx: { prisma },
+    transformer: superjson, // optional - adds superjson serialization
+  });
+};
 
 export default SinglePostPage;
