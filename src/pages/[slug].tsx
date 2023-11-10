@@ -1,11 +1,11 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { api } from "~/utils/api";
-import { PageLayout } from "~/components/layout";
 import Image from "next/image";
+import { PageLayout } from "~/components/layout";
 import { LoadingPage } from "~/components/loading";
 import { PostView } from "~/components/postview";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
+import { api } from "~/utils/api";
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.posts.getPostsByUserId.useQuery({
@@ -30,8 +30,6 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
     username,
   });
   if (!data) return <div>404</div>;
-
-  console.log(username);
 
   return (
     <>
@@ -61,6 +59,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const ssg = generateSSGHelper();
+  console.log(ssg);
 
   const slug = context.params?.slug;
 

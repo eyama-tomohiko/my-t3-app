@@ -4,16 +4,16 @@ import { type NextPage } from "next";
 import { api } from "~/utils/api";
 
 import Image from "next/image";
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
-import { PageLayout } from "~/components/layout";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import { PageLayout } from "~/components/layout";
+import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { PostView } from "~/components/postview";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
 
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState("");
 
   const ctx = api.useContext();
 
@@ -48,6 +48,7 @@ const CreatePostWizard = () => {
       <input
         placeholder="Type some emojis!"
         className="grow bg-transparent outline-none"
+        type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
@@ -94,7 +95,7 @@ const Home: NextPage = () => {
   // Start fetching asap
   api.posts.getAll.useQuery();
 
-  // Return empty div if user isn't loaded yet
+  // Return empty div if user isn't loaded
   if (!userLoaded) return <div />;
 
   return (
@@ -107,6 +108,7 @@ const Home: NextPage = () => {
         )}
         {isSignedIn && <CreatePostWizard />}
       </div>
+
       <Feed />
     </PageLayout>
   );

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { filterForUserClient } from "~/server/helpers/filterUserForClient";
+import { filterUserForClient } from "~/server/helpers/filterUserForClient";
 
 export const profileRouter = createTRPCRouter({
   getUserByUsername: publicProcedure
@@ -12,12 +12,14 @@ export const profileRouter = createTRPCRouter({
       const [user] = await clerkClient.users.getUserList({
         username: [input.username],
       });
+
       if (!user) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "User not found",
         });
       }
-      return filterForUserClient(user);
+
+      return filterUserForClient(user);
     }),
 });

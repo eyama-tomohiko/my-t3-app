@@ -1,9 +1,9 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { api } from "~/utils/api";
 import { PageLayout } from "~/components/layout";
 import { PostView } from "~/components/postview";
-import { createServerSideHelpers } from "@trpc/react-query/server";
+import { generateSSGHelper } from "~/server/helpers/ssgHelper";
+import { api } from "~/utils/api";
 
 const SinglePostPage: NextPage<{ id: string }> = ({ id }) => {
   const { data } = api.posts.getById.useQuery({
@@ -23,20 +23,12 @@ const SinglePostPage: NextPage<{ id: string }> = ({ id }) => {
   );
 };
 
-import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
-import superjson from "superjson";
-
 export const getStaticProps: GetStaticProps = async (context) => {
-  const ssg = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
+  const ssg = generateSSGHelper();
 
   const id = context.params?.id;
 
-  if (typeof id !== "string") throw new Error("no slug");
+  if (typeof id !== "string") throw new Error("no id");
 
   await ssg.posts.getById.prefetch({ id });
 
